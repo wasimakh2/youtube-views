@@ -18,7 +18,7 @@ from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import JavascriptException
 from modules import utils
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 class YouTube:
     """ YouTube """
@@ -51,7 +51,7 @@ class YouTube:
         # A string used to override the default user agent with a custom one
         self.user_agent = utils.user_agent()
         self.options.add_argument('--user-agent={0}'.format(self.user_agent))
-        self.browser = webdriver.Chrome(options=self.options)
+        self.browser = webdriver.Chrome(ChromeDriverManager().install(),options=self.options)
         self.default_timeout = 20
         # Specifies the amount of time the driver should wait when trying to
         # find any element (or elements) if it is not immediately available.
