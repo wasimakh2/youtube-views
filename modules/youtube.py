@@ -19,6 +19,7 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import JavascriptException
 from modules import utils
 from webdriver_manager.chrome import ChromeDriverManager
+from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
 
 class YouTube:
     """ YouTube """
@@ -49,6 +50,17 @@ class YouTube:
             # switch only affects HTTP and HTTPS requests
             self.options.add_argument('--proxy-server={0}'.format(self.proxy))
         # A string used to override the default user agent with a custom one
+        req_proxy = RequestProxy() #you may get different number of proxy when  you run this at each time
+        proxies = req_proxy.get_proxy_list() #this will create proxy list
+        PROXY = proxies[0].get_address()
+        webdriver.DesiredCapabilities.CHROME['proxy']={
+            "httpProxy":PROXY,
+            "ftpProxy":PROXY,
+            "sslProxy":PROXY,
+            
+            "proxyType":"MANUAL",
+            
+        }
         self.user_agent = utils.user_agent()
         self.options.add_argument('--user-agent={0}'.format(self.user_agent))
         self.browser = webdriver.Chrome(ChromeDriverManager().install(),options=self.options)
