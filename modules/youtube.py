@@ -50,6 +50,7 @@ class YouTube:
             # switch only affects HTTP and HTTPS requests
             self.options.add_argument('--proxy-server={0}'.format(self.proxy))
         # A string used to override the default user agent with a custom one
+        
         req_proxy = RequestProxy() #you may get different number of proxy when  you run this at each time
         proxies = req_proxy.get_proxy_list() #this will create proxy list
         PROXY = proxies[0].get_address()

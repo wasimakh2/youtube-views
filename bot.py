@@ -39,54 +39,60 @@ class Bot:
         count = 1
         ipaddr = None
         while count <= self.opts.visits:
-            if self.opts.enable_tor:
-                ipaddr = utils.get_new_tor_ipaddr(proxy=self.opts.proxy)
-            if not ipaddr:
-                ipaddr = utils.get_ipaddr(proxy=self.opts.proxy)
-            youtube = YouTube(
-                url=self.opts.url,
-                proxy=self.opts.proxy,
-                verbose=self.opts.verbose
-            )
-            title = youtube.get_title()
-            if not title:
-                if self.opts.verbose:
-                    print('there was a problem loading this page. Retrying...')
-                    youtube.disconnect()
-                    continue
-            if self.opts.visits:
-                length = (len(title) + 4 - len(str(count)))
-                print('[{0}] {1}'.format(count, '-' * length))
-            if ipaddr:
-                print('external IP address:', ipaddr)
-            channel_name = youtube.get_channel_name()
-            if channel_name:
-                print('channel name:', channel_name)
-            subscribers = youtube.get_subscribers()
-            if subscribers:
-                print('subscribers:', subscribers)
-            print('title:', title)
-            views = youtube.get_views()
-            if views:
-                print('views:', views)
-            # youtube.play_video()
-            youtube.skip_ad()
-            if self.opts.verbose:
-                status = youtube.get_player_state()
-                print('video status:', self.player_status(status))
-            video_duration = youtube.time_duration()
-            seconds = 30
-            if video_duration:
-                print('video duration time:', video_duration)
-                seconds = utils.to_seconds(duration=video_duration.split(':'))
-                if seconds:
+            try:
+                
+            
+                if self.opts.enable_tor:
+                    ipaddr = utils.get_new_tor_ipaddr(proxy=self.opts.proxy)
+                if not ipaddr:
+                    ipaddr = utils.get_ipaddr(proxy=self.opts.proxy)
+                youtube = YouTube(
+                    url=self.opts.url,
+                    proxy=self.opts.proxy,
+                    verbose=self.opts.verbose
+                )
+                title = youtube.get_title()
+                if not title:
                     if self.opts.verbose:
-                        print('video duration time in seconds:', seconds)
-            sleep_time = randrange(seconds)
-            print('stopping video in %s seconds' % sleep_time)
-            time.sleep(sleep_time)
-            youtube.disconnect()
-            count += 1
+                        print('there was a problem loading this page. Retrying...')
+                        youtube.disconnect()
+                        continue
+                if self.opts.visits:
+                    length = (len(title) + 4 - len(str(count)))
+                    print('[{0}] {1}'.format(count, '-' * length))
+                if ipaddr:
+                    print('external IP address:', ipaddr)
+                channel_name = youtube.get_channel_name()
+                if channel_name:
+                    print('channel name:', channel_name)
+                subscribers = youtube.get_subscribers()
+                if subscribers:
+                    print('subscribers:', subscribers)
+                print('title:', title)
+                views = youtube.get_views()
+                if views:
+                    print('views:', views)
+                # youtube.play_video()
+                youtube.skip_ad()
+                if self.opts.verbose:
+                    status = youtube.get_player_state()
+                    print('video status:', self.player_status(status))
+                video_duration = youtube.time_duration()
+                seconds = 30
+                if video_duration:
+                    print('video duration time:', video_duration)
+                    seconds = utils.to_seconds(duration=video_duration.split(':'))
+                    if seconds:
+                        if self.opts.verbose:
+                            print('video duration time in seconds:', seconds)
+                sleep_time = randrange(seconds)
+                print('stopping video in %s seconds' % sleep_time)
+                time.sleep(sleep_time)
+                youtube.disconnect()
+                count += 1
+
+            except Exception as identifier:
+                print(identifier)
 
 
 def _main():
@@ -95,6 +101,7 @@ def _main():
     try:
         cli_args = utils.get_cli_args()
         bot = Bot(cli_args)
+
         bot.run()
     except KeyboardInterrupt:
         pass
